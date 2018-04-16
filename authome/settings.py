@@ -1,3 +1,4 @@
+import ipaddress
 import os
 from confy import env, database, cache
 
@@ -13,6 +14,12 @@ else:
     ALLOWED_HOSTS = [env('ALLOWED_DOMAIN'), ]
 INTERNAL_IPS = ['127.0.0.1', '::1']
 
+INTERNAL_SUBNETS = env('INTERNAL_SUBNETS', None)
+INTERNAL_SUBNETS = [] if INTERNAL_SUBNETS is None else [ipaddress.ip_network(x) for x in INTERNAL_SUBNETS.split(',')]
+INTERNAL_USER_ID = env('INTERNAL_USER_ID', None)
+
+# cache basic auth queries for an hour
+BASIC_AUTH_CACHE_TIME = env('BASIC_AUTH_CACHE_TIME', 3600)
 
 # Application definition
 

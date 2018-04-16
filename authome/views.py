@@ -7,6 +7,7 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.http import urlencode
 from ipware.ip import get_ip
+import ipaddress
 import json
 import base64
 import hashlib
@@ -91,7 +92,30 @@ def auth_dual(request):
     response = HttpResponse('{}', content_type='application/json')
     return response
 
+
+@csrf_exempt
+def auth_internal(request):
+    # If user has a SSO cookie, do a normal auth check.
+    if request.user.is_authenticated():
+        return auth(request)
+
+    # Get the IP of the current user, try and match it up to a session.
+    current_ip = get_ip(request)
+    current_ip_obj = ipaddress.ip_address(current_ip)
+    subnet_match = any((current_ip_obj in x for x in settings.INTERNAL_SUBNETS))
+    headers = {}
+    if subnet_match:
+        headers['email'] = settings.INTERNAL_USER_ID
+        headers['client_logon_ip'] = current_ip
     
+    response = HttpResponse(json.dumps(headers), content_type='application/json')
+    for key, val in headers.items():
+        key = "X-" + key.replace("_", "-")
+        response[key] = val
+
+    return response
+
+
 @csrf_exempt
 def auth_ip(request):
     # If user has a SSO cookie, do a normal auth check.
@@ -257,8 +281,8 @@ def auth(request):
         cache_headers[key], response[key] = val, val
     # cache authentication entries
     if basic_hash and cache_basic:
-        cache.set("auth_cache_{}".format(basic_hash), (response.content, cache_headers), 3600)
-    cache.set("auth_cache_{}".format(request.session.session_key), (response.content, cache_headers), 3600)
+        cache.set("auth_cache_{}".format(basic_hash), (response.content, cache_headers), settings.BASIC_AUTH_CACHE_TIME)
+    cache.set("auth_cache_{}".format(request.session.session_key), (response.content, cache_headers), settings.BASIC_AUTH_CACHE_TIME)
 
     return response
 
