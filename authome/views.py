@@ -94,6 +94,10 @@ def auth_dual(request):
     
 @csrf_exempt
 def auth_ip(request):
+    # If user has a SSO cookie, do a normal auth check.
+    if request.user.is_authenticated():
+        return auth(request)
+
     # Get the IP of the current user, try and match it up to a session.
     current_ip = get_ip(request)
 
@@ -117,10 +121,6 @@ def auth_ip(request):
             response["X-email"] = user.email
             response["X-client-logon-ip"] = current_ip
             return response
-
-    # If user has a SSO cookie, do a normal auth check.
-    if request.user.is_authenticated():
-        return auth(request)
 
     headers = {'client_logon_ip': current_ip}
 
