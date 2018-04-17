@@ -13,6 +13,7 @@ class AuthTestCase(TestCase):
     home_url = reverse('home')
     auth_url = reverse('auth')
     auth_ip_url = reverse('auth_ip')
+    auth_internal_url = reverse('auth_internal')
     auth_dual_url = reverse('auth_dual')
     username = 'testu'
     email = 'test.user@test.domain'
@@ -114,6 +115,10 @@ class AuthTestCase(TestCase):
 
     def test_auth_ip_without_creds(self):
         response = self.client.get(self.auth_ip_url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_auth_internal_without_creds(self):
+        response = self.client.get(self.auth_internal_url)
         self.assertEqual(response.status_code, 200)
 
     @mock.patch('adal.AuthenticationContext.acquire_token_with_username_password')

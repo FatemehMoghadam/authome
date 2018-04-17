@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden
 from django.contrib.auth import login, logout, get_user_model
 from django.core.urlresolvers import reverse
