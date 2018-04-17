@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden
 from django.contrib.auth import login, logout, get_user_model
 from django.core.urlresolvers import reverse
@@ -9,6 +7,7 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.http import urlencode
 from ipware.ip import get_ip
+import six
 import ipaddress
 import json
 import base64
@@ -103,7 +102,7 @@ def auth_internal(request):
 
     # Get the IP of the current user, try and match it up to a session.
     current_ip = get_ip(request)
-    current_ip_obj = ipaddress.ip_address(current_ip)
+    current_ip_obj = ipaddress.ip_address(six.u(current_ip))
     subnet_match = any((current_ip_obj in x for x in settings.INTERNAL_SUBNETS))
     headers = {}
     if subnet_match:

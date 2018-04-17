@@ -12,3 +12,4 @@ mock==2.0.0
 gevent==1.1.2
 uWSGI==2.0.15
 uwsgitop==0.10
+six==1.11.0
