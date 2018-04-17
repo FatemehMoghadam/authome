@@ -22,6 +22,7 @@ env:
         - SECRET_KEY="SecretKeyForTravisCI"
         - DATABASE_URL="postgis://postgres@localhost:5432/travis_ci_test"
         - AZUREAD_AUTHORITY="https://login.microsoftonline.com/thisisnotarealazureaudauthorityurl"
+        - INTERNAL_SUBNETS="127.0.0.1/32"
 install:
     - psql -U postgres -p 5432 -c "create extension postgis;"
     - pip install --upgrade setuptools

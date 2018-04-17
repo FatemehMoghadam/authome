@@ -1,3 +1,4 @@
+import six
 import ipaddress
 import os
 from confy import env, database, cache
@@ -15,7 +16,7 @@ else:
 INTERNAL_IPS = ['127.0.0.1', '::1']
 
 INTERNAL_SUBNETS = env('INTERNAL_SUBNETS', None)
-INTERNAL_SUBNETS = [] if INTERNAL_SUBNETS is None else [ipaddress.ip_network(x) for x in INTERNAL_SUBNETS.split(',')]
+INTERNAL_SUBNETS = [] if INTERNAL_SUBNETS is None else [ipaddress.ip_network(six.u(x)) for x in INTERNAL_SUBNETS.split(',')]
 INTERNAL_USER_ID = env('INTERNAL_USER_ID', None)
 
 # cache basic auth queries for an hour
