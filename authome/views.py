@@ -15,6 +15,13 @@ import hashlib
 import adal
 import re
 
+import logging
+logger = logging.getLogger('authome.requests')
+
+def log_request(request):
+    logger.info('[{}] ({}) {} "{}" - {}'.format(request.path, request.META.get('REMOTE_ADDR', '-'), request.META.get('SERVER_NAME', '-'), request.META.get('REQUEST_URI', '-'), request.user.email))
+
+
 from django.contrib.auth.models import User
 from authome.models import UserSession
 
@@ -63,6 +70,7 @@ def shared_id_authenticate(email, shared_id):
 
 @csrf_exempt
 def auth_get(request):
+    log_request(request)
     # If user is using SSO, do a normal auth check.
     if request.user.is_authenticated():
         return auth(request)
@@ -85,6 +93,7 @@ def auth_get(request):
 
 @csrf_exempt
 def auth_dual(request):
+    log_request(request)
     # If user has a SSO cookie, do a normal auth check.
     if request.user.is_authenticated():
         return auth(request)
@@ -96,6 +105,7 @@ def auth_dual(request):
 
 @csrf_exempt
 def auth_internal(request):
+    log_request(request)
     # If user has a SSO cookie, do a normal auth check.
     if request.user.is_authenticated():
         return auth(request)
@@ -119,6 +129,7 @@ def auth_internal(request):
 
 @csrf_exempt
 def auth_ip(request):
+    log_request(request)
     # If user has a SSO cookie, do a normal auth check.
     if request.user.is_authenticated():
         return auth(request)
@@ -168,6 +179,7 @@ def auth_ip(request):
 
 @csrf_exempt
 def auth(request):
+    log_request(request)
     # grab the basic auth data from the request
     basic_auth = request.META.get('HTTP_AUTHORIZATION').strip() if 'HTTP_AUTHORIZATION' in request.META else ''
     basic_hash = hashlib.sha1(basic_auth.encode('utf-8')).hexdigest() if basic_auth else None

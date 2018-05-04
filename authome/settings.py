@@ -109,6 +109,31 @@ TEMPLATES = [
 ]
 
 
+LOGGING = {
+    'version': 1,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'verbose',
+            'filename': os.path.join(BASE_DIR, 'logs/requests.log')
+        },
+    },
+    'loggers': {
+        'authome.requests': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True
+        }
+    }
+}
+
+
 DATABASES = {'default': database.config()}
 ROOT_URLCONF = 'authome.urls'
 WSGI_APPLICATION = 'authome.wsgi.application'
