@@ -108,6 +108,7 @@ TEMPLATES = [
     },
 ]
 
+LOG_PATH = env('LOG_PATH', os.path.join(BASE_DIR, 'logs'))
 
 LOGGING = {
     'version': 1,
@@ -121,7 +122,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'formatter': 'verbose',
-            'filename': os.path.join(BASE_DIR, 'logs/requests.log')
+            'filename': os.path.join(LOG_PATH, 'requests.log')
         },
     },
     'loggers': {

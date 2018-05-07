@@ -24,6 +24,7 @@ env:
         - AZUREAD_AUTHORITY="https://login.microsoftonline.com/thisisnotarealazureaudauthorityurl"
         - INTERNAL_SUBNETS="127.0.0.1/32"
 install:
+    - mkdir logs
     - psql -U postgres -p 5432 -c "create extension postgis;"
     - pip install --upgrade setuptools
     - pip install -r requirements.txt
