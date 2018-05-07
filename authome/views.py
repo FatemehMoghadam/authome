@@ -19,7 +19,7 @@ import logging
 logger = logging.getLogger('authome.requests')
 
 def log_request(request):
-    logger.info('[{}] ({}) {} "{}" - {}'.format(request.path, request.META.get('REMOTE_ADDR', '-'), request.META.get('SERVER_NAME', '-'), request.META.get('REQUEST_URI', '-'), request.user.email))
+    logger.info('[{}] ({}) {} "{}" - {}'.format(request.path, request.META.get('REMOTE_ADDR', '-'), request.META.get('SERVER_NAME', '-'), request.META.get('REQUEST_URI', '-'), request.user.email if (request.user and hasattr(request.user, 'email')) else '-'))
 
 
 from django.contrib.auth.models import User
