@@ -55,7 +55,7 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 # enable read cache backend for session store
-SESSION_ENGINE = 'django.contrib.sessions.backend.cached_db'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # set the domain-global session cookie
 SESSION_COOKIE_DOMAIN = env('SESSION_COOKIE_DOMAIN', None)
