@@ -13,11 +13,6 @@ if DEBUG:
     ALLOWED_HOSTS = ['*']
 else:
     ALLOWED_HOSTS = [env('ALLOWED_DOMAIN'), ]
-INTERNAL_IPS = ['127.0.0.1', '::1']
-
-INTERNAL_SUBNETS = env('INTERNAL_SUBNETS', None)
-INTERNAL_SUBNETS = [] if INTERNAL_SUBNETS is None else [ipaddress.ip_network(six.u(x)) for x in INTERNAL_SUBNETS.split(',')]
-INTERNAL_USER_ID = env('INTERNAL_USER_ID', None)
 
 # cache basic auth queries for an hour
 BASIC_AUTH_CACHE_TIME = env('BASIC_AUTH_CACHE_TIME', 3600)
@@ -58,6 +53,10 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
 )
+
+# enable read cache backend for session store
+SESSION_ENGINE = 'django.contrib.sessions.backend.cached_db'
+
 # set the domain-global session cookie
 SESSION_COOKIE_DOMAIN = env('SESSION_COOKIE_DOMAIN', None)
 if env('SESSION_COOKIE_NAME', None):

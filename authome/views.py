@@ -104,30 +104,6 @@ def auth_dual(request):
 
 
 @csrf_exempt
-def auth_internal(request):
-    log_request(request)
-    # If user has a SSO cookie, do a normal auth check.
-    if request.user.is_authenticated():
-        return auth(request)
-
-    # Get the IP of the current user, try and match it up to a session.
-    current_ip = get_ip(request)
-    current_ip_obj = ipaddress.ip_address(six.u(current_ip))
-    subnet_match = any((current_ip_obj in x for x in settings.INTERNAL_SUBNETS))
-    headers = {}
-    if subnet_match:
-        headers['email'] = settings.INTERNAL_USER_ID
-        headers['client_logon_ip'] = current_ip
-    
-    response = HttpResponse(json.dumps(headers), content_type='application/json')
-    for key, val in headers.items():
-        key = "X-" + key.replace("_", "-")
-        response[key] = val
-
-    return response
-
-
-@csrf_exempt
 def auth_ip(request):
     log_request(request)
     # If user has a SSO cookie, do a normal auth check.
