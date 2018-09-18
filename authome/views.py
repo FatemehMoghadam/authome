@@ -257,10 +257,10 @@ def auth(request):
     }
     response = HttpResponse(json.dumps(response_contents), content_type='application/json')
     headers = response_contents
-    headers["full_name"] = u"{}, {}".format(
+    headers["full_name"] = u" ".join(
+        headers.get("first_name", ""),
         headers.get("last_name", ""), 
-        headers.get("first_name", "")
-    )
+    ).strip()
     headers["logout_url"] = "/sso/auth_logout"
    
     # cache response
